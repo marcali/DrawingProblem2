@@ -3,8 +3,8 @@
 import java.util.*;
 
 public class Rectangle extends Figure {
-    Rectangle(int x1, int y1, int x2, int y2) {
-<span class="fc" id="L7">        super(x1, y1, x2, y2);</span>
+    Rectangle(InitialCoordinatesWrapper coordinates) {
+<span class="fc" id="L7">        super(coordinates);</span>
 <span class="fc" id="L8">    }</span>
 
     @Override
@@ -30,8 +30,13 @@ public class Rectangle extends Figure {
 <span class="fc" id="L30">                count++;</span>
             }
 <span class="fc" id="L32">        }</span>
+<span class="pc bpc" id="L33" title="1 of 2 branches missed.">        if (coordinatesOfTheFigure == null) {</span>
+<span class="nc" id="L34">            System.out.println(&quot;A rectangle cannot be build with these coordinates&quot;);</span>
+<span class="nc" id="L35">            return new int[0];</span>
 
-<span class="fc" id="L34">        return coordinatesOfTheFigure;</span>
+        } else {
+<span class="fc" id="L38">            return coordinatesOfTheFigure;</span>
+        }
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

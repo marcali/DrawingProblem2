@@ -1,22 +1,20 @@
 package drawingproblem;
 
-import com.google.common.annotations.VisibleForTesting;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class DrawingProblem {
-    private static boolean keepExecuting;
-    private static boolean canvasCreated;
-    private Canvas cv;
+    protected static boolean keepExecuting;
+    protected static boolean canvasCreated;
+    protected Canvas canvas;
 
-    public static void main(String[] args) throws IOException, Canvas.InvalidParameters {
+    public static void main(String[] args) throws IOException, InvalidParametersException {
         canvasCreated = false;
 
         DrawingProblem dp = new DrawingProblem();
         keepExecuting = true;
-        while (keepExecuting == true) {
+        while (keepExecuting) {
             System.out.println("Please enter a command.");
             BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
             String consoleInput = console.readLine();
@@ -25,54 +23,48 @@ public class DrawingProblem {
         }
     }
 
-    @VisibleForTesting
-    private Boolean outputAction(String consoleInput) throws Canvas.InvalidParameters {
+    protected Boolean outputAction(String consoleInput) throws InvalidParametersException {
         char command = Character.toUpperCase(consoleInput.charAt(0));
-        int[] coordinates = returnCoordinatesArray(consoleInput);
 
         if (command == 'C') {
 
             canvasCreated = true;
-            int w = coordinates[0];
-            int h = coordinates[1];
-            cv = new Canvas(w, h);
-            cv.drawCanvas();
-        } else if (command == 'L' || command == 'R') {
-            if (canvasCreated == true) {
-                int x1 = coordinates[0];
-                int y1 = coordinates[1];
-                int x2 = coordinates[2];
-                int y2 = coordinates[3];
+            InitialCoordinatesWrapper coordinates = new InitialCoordinatesWrapper(consoleInput);
 
-                if (x1 > 0 & cv.w >= x1 & x2 > 0 && cv.w >= x2 & y1 > 0 & cv.h >= y1 & y2 > 0 & cv.h >= y2) {
-                    Figure nf = (command == 'R') ? new Rectangle(x1, y1, x2, y2) : new Line(x1, y1, x2, y2);
-                    cv.drawFigure(nf);
+            canvas = new Canvas(coordinates);
+            canvas.drawCanvas();
+        } else if (command == 'L' || command == 'R') {
+            if (canvasCreated) {
+
+                InitialCoordinatesWrapper coordinates = new InitialCoordinatesWrapper(consoleInput);
+                if (coordinatesValidationPassed(coordinates)) {
+                    Figure newFigure = (command == 'R') ? new Rectangle(coordinates) : new Line(coordinates);
+                    canvas.drawFigure(newFigure);
                 } else {
-                    System.out.print("Please give coordinates are not out of canvas boundaries.\n");
+                    System.out.println("Please give coordinates that are not out of canvas boundaries.");
                 }
             }
-
 
         } else if (command == 'Q') {
             keepExecuting = false;
         }
+        else{
+            System.out.println("This command is not recognised, please type C, L or R");
+        }
 
-        if (cv != null) {
-            cv.draw();
+        if (canvas != null) {
+            canvas.draw();
         }
         return keepExecuting;
     }
 
-    private int[] returnCoordinatesArray(String consoleInput) {
-        String[] console = consoleInput.split(" ");
-        int[] result = new int[consoleInput.length() - 1];
-
-        for (int i = 1; i <= console.length - 1; i++) {
-            int n = Integer.parseInt(console[i]);
-            result[i - 1] = n;
-        }
-
-        return result;
+    protected Boolean coordinatesValidationPassed(InitialCoordinatesWrapper coordinates) {
+        return coordinates.x1 > 0
+        && canvas.width >= coordinates.x1
+        && coordinates.x2 > 0
+        && canvas.width >= coordinates.x2
+        && coordinates.y1 > 0
+        && canvas.height >= coordinates.y1 && coordinates.y2 > 0
+        && canvas.height >= coordinates.y2;
     }
-
 }

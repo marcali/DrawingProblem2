@@ -1,80 +1,87 @@
 package drawingproblem;
 
 public class Canvas {
-    public int w;
-    public int h;
+    public int width;
+    public int height;
     public char[] result;
 
+    private final char NEW_LINE = '\n';
+    private final char SLASH = '|';
+    private final char BLANK = ' ';
+    private final char DASH = '-';
+    private final char X_CHAR = 'x';
 
-    public Canvas(int w, int h) {
-        this.w = w;
-        this.h = h;
-        this.result = new char[(w + 2) * (h + 2) + h + 2];
+
+    public Canvas(InitialCoordinatesWrapper widthAndHeightCoordinates) {
+        this.width = widthAndHeightCoordinates.x1;
+        this.height = widthAndHeightCoordinates.y1;
+        if(width < 100 || height < 100 )
+        {
+            this.result = new char[(width + 2) * (height + 2) + height + 2];
+        }else
+        {
+            System.out.println("These canvas coordinates are too large, please chose smaller canvas");
+        }
+
     }
 
-
-    public char[] drawCanvas() throws InvalidParameters {
+    public char[] drawCanvas() throws InvalidParametersException {
         int count = 0;
 
         try {
-            for (int i = 0; i < h + 2; i++) {
-                if (i == 0 || i == h + 1) {
+            for (int i = 0; i < height + 2; i++) {
+                if (i == 0 || i == height + 1) {
                     for (char element : returnFirstAndLastLineArray()) {
-                        result[count] = element;
+                     result[count] = element;
                         count++;
                     }
                 } else {
                     for (char element : returnMiddleLineArray()) {
-                        result[count] = element;
+                     result[count] = element;
                         count++;
                     }
                 }
             }
         } catch (Exception e) {
-            throw new InvalidParameters("Parameters entered are Invalid", e);
+            throw new InvalidParametersException("An error has occurred due to invalid coordinates", e);
         }
 
         return result;
     }
 
     private char[] returnMiddleLineArray() {
-        char[] result = new char[w + 3];
-        char newLine = '\n';
-        char slash = '|';
-        char blank = ' ';
+        char[] middleLine = new char[width + 3];
 
-        for (int j = 0; j < w + 3; j++) {
-            if (j == 0 || j == w + 1) {
-                result[j] = slash;
-            } else if (j < w + 2) {
-                result[j] = blank;
+        for (int j = 0; j < width + 3; j++) {
+            if (j == 0 || j == width + 1) {
+                middleLine[j] = SLASH;
+            } else if (j < width + 2) {
+                middleLine[j] = BLANK;
             } else {
-                result[j] = newLine;
+                middleLine[j] = NEW_LINE;
             }
         }
-        return result;
+        return middleLine;
     }
 
 
     private char[] returnFirstAndLastLineArray() {
-        char[] result = new char[w + 3];
-        char dash = '-';
-        char newLine = '\n';
-
-        for (int i = 0; i < w + 3; i++) {
-            if (i < w + 2) {
-                result[i] = dash;
+        char[] firstAndLastLine = new char[width + 3];
+        
+        for (int i = 0; i < width + 3; i++) {
+            if (i < width + 2) {
+             firstAndLastLine[i] = DASH;
             } else {
-                result[i] = newLine;
+             firstAndLastLine[i] = NEW_LINE;
             }
         }
-        return result;
+        return firstAndLastLine;
     }
 
-    public void drawFigure(Figure fig) {
+    public void drawFigure(Figure fig) throws InvalidParametersException {
 
-        for (int i : fig.returnCoordinates(this.w)) {
-            result[i] = 'x';
+        for (int i : fig.returnCoordinates(this.width)) {
+         result[i] = X_CHAR;
         }
 
     }
@@ -83,11 +90,4 @@ public class Canvas {
         System.out.print(new String(result));
     }
 
-
-    public static class InvalidParameters extends Exception {
-        public InvalidParameters(String errorMessage, Throwable err)
-        {
-            super(errorMessage, err);
-        }
-    }
 }

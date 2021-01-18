@@ -9,11 +9,11 @@ public abstract class Figure {
     protected int yDiff;
     protected int[] coordinatesOfTheFigure;
 
-<span class="fc" id="L12">    public Figure(int x1, int y1, int x2, int y2) {</span>
-<span class="fc" id="L13">        this.x1 = x1;</span>
-<span class="fc" id="L14">        this.x2 = x2;</span>
-<span class="fc" id="L15">        this.y1 = y1;</span>
-<span class="fc" id="L16">        this.y2 = y2;</span>
+<span class="fc" id="L12">    public Figure(InitialCoordinatesWrapper coordinates) {</span>
+<span class="fc" id="L13">        this.x1 = coordinates.x1;</span>
+<span class="fc" id="L14">        this.y1 = coordinates.y1;</span>
+<span class="fc" id="L15">        this.x2 = coordinates.x2;</span>
+<span class="fc" id="L16">        this.y2 = coordinates.y2;</span>
 <span class="fc" id="L17">        this.xDiff = Math.abs(x2 - x1);</span>
 <span class="fc" id="L18">        this.yDiff = Math.abs(y2 - y1);</span>
 
